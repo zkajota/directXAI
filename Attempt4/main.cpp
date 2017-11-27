@@ -42,16 +42,22 @@ float y = 0.0f;
 float x = 0.0f;
 const int Width = 800;
 const int Height = 600;
-
+const int objectNumber = 10000;
+const float spaceBetween = 3.0f;
+float oldSpaceBetween = 0.0f;
 XMMATRIX WVP;
 ///////////////**************new**************////////////////////
 XMMATRIX cube1World;
+XMMATRIX cube2World;
 
+XMMATRIX cubeWorlds[objectNumber];
+XMMATRIX Translations[objectNumber];
 
 ///////////////**************new**************////////////////////
 XMMATRIX Rotation;
 XMMATRIX Scale;
 XMMATRIX Translation;
+XMMATRIX Translation2;
 float rot = 0.01f;
 ///////////////**************new**************////////////////////
 
@@ -420,32 +426,32 @@ bool InitScene()
 	//Camera information
 	///////////////**************new**************////////////////////
 	Camera->CameraSetup(Width, Height);
-	Camera->CameraPosition(0.0f, 3.0f, -8.0f, 0.0f);
 	///////////////**************new**************////////////////////
 
 	//Set the View matrix
 
 	//Set the Projection matrix
-
+	for (int i = 0; i < objectNumber; i++)
+	{
+		cubeWorlds[i] = XMMatrixIdentity();
+		XMVECTOR rotaxis = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+		Rotation = XMMatrixRotationAxis(rotaxis, rot);
+		Translations[i] = XMMatrixTranslation(oldSpaceBetween, x, 0.0f);
+		oldSpaceBetween = oldSpaceBetween + spaceBetween;
+		cubeWorlds[i] = Translations[i];
+	}
 	return true;
 }
 
 void UpdateScene()
 {
+	//update Camera
+	Camera->CameraUpdate();
 	rot += .0005f;
 	if (rot > 6.26f)
 		rot = 0.0f;
 
-	//Reset cube1World
-	cube1World = XMMatrixIdentity();
 
-	//Define cube1's world space matrix
-	XMVECTOR rotaxis = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-	Rotation = XMMatrixRotationAxis(rotaxis, rot);
-	Translation = XMMatrixTranslation(y, x, 0.0f);
-
-	//Set cube1's world space using the transformations
-	cube1World = Translation; //* Rotation;
 }
 
 
@@ -458,14 +464,26 @@ void DrawScene()
 	d3d11DevCon->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 
-	WVP = cube1World * Camera->camView * Camera ->camProjection;
-	cbPerObj.WVP = XMMatrixTranspose(WVP);
-	d3d11DevCon->UpdateSubresource(cbPerObjectBuffer, 0, NULL, &cbPerObj, 0, 0);
-	d3d11DevCon->VSSetConstantBuffers(0, 1, &cbPerObjectBuffer);
+	//WVP = cube1World * Camera->camView * Camera ->camProjection;
+	//cbPerObj.WVP = XMMatrixTranspose(WVP);
+	//d3d11DevCon->UpdateSubresource(cbPerObjectBuffer, 0, NULL, &cbPerObj, 0, 0);
+	//d3d11DevCon->VSSetConstantBuffers(0, 1, &cbPerObjectBuffer);
+	//d3d11DevCon->DrawIndexed(36, 0, 0);
 
-	//Draw the first cube
-	d3d11DevCon->DrawIndexed(36, 0, 0);
-
+	//WVP = cube2World * Camera->camView * Camera->camProjection;
+	//cbPerObj.WVP = XMMatrixTranspose(WVP);
+	//d3d11DevCon->UpdateSubresource(cbPerObjectBuffer, 0, NULL, &cbPerObj, 0, 0);
+	//d3d11DevCon->VSSetConstantBuffers(0, 1, &cbPerObjectBuffer);
+	//d3d11DevCon->DrawIndexed(36, 0, 0);
+	
+	for (int i = 0; i < objectNumber; i++)
+	{
+		WVP = cubeWorlds[i] * Camera->camView * Camera->camProjection;
+		cbPerObj.WVP = XMMatrixTranspose(WVP);
+		d3d11DevCon->UpdateSubresource(cbPerObjectBuffer, 0, NULL, &cbPerObj, 0, 0);
+		d3d11DevCon->VSSetConstantBuffers(0, 1, &cbPerObjectBuffer);
+		d3d11DevCon->DrawIndexed(36, 0, 0);
+	}
 	//Present the backbuffer to the screen
 	SwapChain->Present(0, 0);
 }

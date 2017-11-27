@@ -17,11 +17,14 @@ public:
 	XMVECTOR camPosition;
 	XMVECTOR camTarget;
 	XMVECTOR camUp;
+	
+	float testFloat;
 
 	void CameraSetup(int width, int height);
 	void CameraPosition(float a, float b, float c, float d);
 	void CameraTarget(float a, float b, float c, float d);
 	void CameraUp(float a, float b, float c, float d);
+	void CameraUpdate();
 
 };
 
