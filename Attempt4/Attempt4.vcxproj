@@ -132,11 +132,17 @@
     </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="agent.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="graphics.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="model.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="agent.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="graphics.h" />
+    <ClInclude Include="model.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

@@ -18,7 +18,7 @@ public:
 	XMVECTOR camTarget;
 	XMVECTOR camUp;
 	
-	float testFloat;
+	float speed;
 
 	void CameraSetup(int width, int height);
 	void CameraPosition(float a, float b, float c, float d);
