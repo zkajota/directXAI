@@ -24,13 +24,14 @@ public:
 	graphics();
 	~graphics();
 
-	std::unique_ptr<camera> Camera;
+	std::unique_ptr<camera> m_Camera;
 
 	bool CreateSwapChain(int width, int height, HWND hwnd);
 	void CleanUp();
 	bool CreateGraphics(int width, int height);
 	void draw();
 	void initObjects();
+	void update();
 	
 	struct Vertex
 	{
@@ -85,8 +86,6 @@ public:
 	XMMATRIX Translation2;
 
 	float rot = 0.01f;
-
-
 
 };
 

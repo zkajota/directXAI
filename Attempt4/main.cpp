@@ -22,7 +22,7 @@
 
 
 
-std::unique_ptr<graphics> Graphics(new graphics);
+std::unique_ptr<graphics> m_Graphics(new graphics);
 std::unique_ptr<model> Model(new model);
 std::unique_ptr<agent> Agent(new agent);
 
@@ -90,7 +90,7 @@ int WINAPI WinMain(HINSTANCE hInstance,    //Main windows function
 
 	messageloop();
 
-	Graphics->CleanUp();
+	m_Graphics->CleanUp();
 
 	return 0;
 }
@@ -164,7 +164,7 @@ bool InitializeWindow(HINSTANCE hInstance,
 
 bool InitializeDirect3d11App(HINSTANCE hInstance)
 {
-	Graphics->CreateSwapChain(Width, Height, hwnd);
+	m_Graphics->CreateSwapChain(Width, Height, hwnd);
 	return true;
 }
 
@@ -175,27 +175,21 @@ void CleanUp()
 
 bool InitScene()
 {
-	Graphics->CreateGraphics(Width, Height);
+	m_Graphics->CreateGraphics(Width, Height);
 
-	Graphics->initObjects();
+	m_Graphics->initObjects();
 	return true;
 }
 
 void UpdateScene()
 {
-	//update Camera
-	//Camera->CameraUpdate();
-	//rot += .0005f;
-	//if (rot > 6.26f)
-	//	rot = 0.0f;
-
+	m_Graphics->update();
 }
 
 
 void DrawScene()
 {
-	Graphics->draw();
-
+	m_Graphics->draw();
 }
 
 int messageloop() {

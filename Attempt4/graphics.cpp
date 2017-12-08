@@ -7,7 +7,7 @@
 graphics::graphics()
 {
 	//Camera = new camera();
-	Camera = std::make_unique<camera>();
+	m_Camera = std::make_unique<camera>();
 }
 
 
@@ -226,7 +226,7 @@ bool graphics::CreateGraphics(int width, int height)
 	cbbd.MiscFlags = 0;
 
 	hr = d3d11Device->CreateBuffer(&cbbd, NULL, &cbPerObjectBuffer);
-	Camera->CameraSetup(width, height);
+	m_Camera->CameraSetup(width, height);
 	return true;
 }
 
@@ -238,7 +238,7 @@ void graphics::draw()
 
 	for (int i = 0; i < objectNumber; i++)
 	{
-		WVP = cubeWorlds[i] * Camera->camView * Camera->camProjection;
+		WVP = cubeWorlds[i] * m_Camera->camView * m_Camera->camProjection;
 		cbPerObj.WVP = XMMatrixTranspose(WVP);
 		d3d11DevCon->UpdateSubresource(cbPerObjectBuffer, 0, NULL, &cbPerObj, 0, 0);
 		d3d11DevCon->VSSetConstantBuffers(0, 1, &cbPerObjectBuffer);
@@ -259,4 +259,9 @@ void graphics::initObjects()
 		oldSpaceBetween = oldSpaceBetween + spaceBetween;
 		cubeWorlds[i] = Translations[i];
 	}
+}
+
+void graphics::update()
+{
+	m_Camera->CameraUpdate();
 }
